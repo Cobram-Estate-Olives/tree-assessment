@@ -1,6 +1,6 @@
 {
-    "name": "Flower Counter",
-    "short_name": "FC",
+    "name": "Tree Assesment",
+    "short_name": "TA",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#ffffff",
