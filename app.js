@@ -40,6 +40,7 @@ if ('serviceWorker' in navigator) {
 let offlineData = JSON.parse(localStorage.getItem('offlineData')) || [];
 
 // Add event listeners to the counter buttons
+document.getElementById('button4').addEventListener('click', () => logCount("Alive Trees"));
 document.getElementById('button0').addEventListener('click', () => logCount("Verticillium"));
 document.getElementById('button1').addEventListener('click', () => logCount("Dead Trees"));
 document.getElementById('button2').addEventListener('click', () => logCount("Missing Trees"));
