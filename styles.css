@@ -67,7 +67,7 @@ button {
   
 
   .grove-btn {
-    background-color: #5c5c5c;
+    background-color: #292929;
     color: white;
     font-size: 20px;
     font-weight: 600;
@@ -89,8 +89,8 @@ button {
 }
 
 .grove-btn:active {
-    background-color: #4e622d;
-    box-shadow: 3px 3px 8px #2a4127;
+    background-color: #292929;
+    box-shadow: 3px 3px 8px #292929;
     transform: scale(0.96);
 }
 
@@ -114,8 +114,8 @@ button {
 }
 
 .icon-button button {
-    background-color: #5c5c5c;
-    box-shadow: 6px 6px 12px hsla(0, 0%, 33%, 0.7);
+    background-color: #292929;
+    box-shadow: 6px 6px 12px hsla(0, 0%, 16%, 0.7);
     color: white;
     border-radius: 8px;
     cursor: pointer;
@@ -130,7 +130,7 @@ button {
 
 .icon-button p {
     font-size: 10px;
-    color: #3d3d3d;
+    color: #292929;
     font-weight: 600;
     margin: 6px 0 0;
 }
@@ -314,7 +314,7 @@ input[type="text"]:focus {
     cursor: pointer;
     transition: background-color 0.25s ease box-shadow 0.25s ease transform 0.25s ease;
     width: 100%;
-    height: 100px;
+    height: 90px;
     box-sizing: border-box;
     margin-top: 20px;
 }
