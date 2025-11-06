@@ -5,7 +5,8 @@ const CACHE_ASSETS = [
   './', // Cache the root for offline access
   'index.html',
   'styles.css',
-  'index.js'
+  'index.js',
+  'icon.png'
 ];
 
 // Install event
