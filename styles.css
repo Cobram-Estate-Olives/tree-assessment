@@ -294,12 +294,12 @@ input[type="text"]:focus {
   }
 
   #button3::after {
-    background-color: #72953b; /* darker green when pressed */
+    background-color: #414141; /* darker green when pressed */
     
 }
 
 #button3:active {
-    background-color: #72953b;
+    background-color: #414141;
     transform: scale(0.96);
 }
 
