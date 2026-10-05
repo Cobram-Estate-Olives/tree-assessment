@@ -89,52 +89,121 @@ function logCount(value) {
 }
 
 // Download Data as CSV
-document.getElementById('IconDownloadButton').addEventListener('click', downloadData);
-
-function downloadData() {
-    if (offlineData.length === 0) {
-        alert("No data to download.");
-        return;
-    }
-
-    const csvContent = "data:text/csv;charset=utf-8,"
-        + ["Timestamp,Name,Management Area,Variety,Block,Row,Value"]
-        + "\n"
-        + offlineData.map(entry => `${entry.timestamp},${entry.name},${entry.managementArea},${entry.variety},${entry.block},${entry.row},${entry.value}`).join("\n");
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'counter_data.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
 // Download Data as CSV
+document.getElementById('IconDownloadButton').addEventListener('click', downloadData);
 document.getElementById('downloadButton').addEventListener('click', downloadData);
 
-function downloadData() {
+async function downloadData() {
     if (offlineData.length === 0) {
         alert("No data to download.");
         return;
     }
-    //GPS change
-    const csvContent = "data:text/csv;charset=utf-8,"
-  + ["Timestamp,Name,Management Area,Variety,Block,Row,Value,GPS"]
-  + "\n"
-  + offlineData.map(entry => 
-      `${entry.timestamp},${entry.name},${entry.managementArea},${entry.variety},${entry.block},${entry.row},${entry.value},${entry.gps}`
-    ).join("\n");
 
-    //GPS change
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'counter_data.csv');
+    // CSV column headings
+    const headers = [
+        "Timestamp",
+        "Name",
+        "Management Area",
+        "Variety",
+        "Planting Year",
+        "Block",
+        "Row",
+        "Value",
+        "GPS"
+    ];
+
+    // Properly format values for CSV
+    function escapeCSV(value) {
+        if (value === undefined || value === null) {
+            return "";
+        }
+
+        const stringValue = String(value);
+
+        if (
+            stringValue.includes(",") ||
+            stringValue.includes('"') ||
+            stringValue.includes("\n") ||
+            stringValue.includes("\r")
+        ) {
+            return `"${stringValue.replace(/"/g, '""')}"`;
+        }
+
+        return stringValue;
+    }
+
+    // Build CSV
+    const csvRows = [
+        headers.join(","),
+        ...offlineData.map(entry =>
+            [
+                entry.timestamp,
+                entry.name,
+                entry.managementArea,
+                entry.variety,
+                entry.plantingYear,
+                entry.block,
+                entry.row,
+                entry.value,
+                entry.gps
+            ].map(escapeCSV).join(",")
+        )
+    ];
+
+    // UTF-8 BOM helps Excel read the file correctly
+    const csvContent = "\uFEFF" + csvRows.join("\r\n");
+
+    // Create the CSV file
+    const blob = new Blob([csvContent], {
+        type: "text/csv;charset=utf-8"
+    });
+
+    const file = new File(
+        [blob],
+        "counter_data.csv",
+        { type: "text/csv;charset=utf-8" }
+    );
+
+    // iPhone / Home Screen app:
+    // use the native Share / Save to Files interface
+    if (
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare({ files: [file] })
+    ) {
+        try {
+            await navigator.share({
+                files: [file],
+                title: "Counter Data",
+                text: "Counter data export"
+            });
+
+            return;
+
+        } catch (error) {
+            // User cancelled the Share window
+            if (error.name === "AbortError") {
+                return;
+            }
+
+            console.log("Share failed, trying normal download:", error);
+        }
+    }
+
+    // Safari / desktop fallback
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "counter_data.csv";
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    }, 1000);
 }
 
 // View Logged Data (show data in a table)
